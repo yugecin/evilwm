@@ -405,23 +405,23 @@ void maximise_client(Client *c, int action, int hv) {
 void apply_gaps(Client *c) {
 	// do gaps, dirty
 	int overlap;
-	if(c->y < opt_gap0) {
+	if (c->y < opt_gap0) {
 		c->y = opt_gap0;
 	}
-	if(c->x < opt_gap3) {
+	if (c->x < opt_gap3) {
 		c->x = opt_gap3;
 	}
 	overlap = c->y + c->height - (DisplayHeight(dpy, c->screen->screen) - opt_gap2);
-	while(overlap-- > 0) {
-		if(c->y > opt_gap0) {
+	while (overlap-- > 0) {
+		if (c->y > opt_gap0) {
 			c->y--;
 		} else {
 			c->height--;
 		}
 	}
 	overlap = c->x + c->width - (DisplayWidth(dpy, c->screen->screen) - opt_gap1);
-	while(overlap-- > 0) {
-		if(c->x > opt_gap3) {
+	while (overlap-- > 0) {
+		if (c->x > opt_gap3) {
 			c->x--;
 		} else {
 			c->width--;
