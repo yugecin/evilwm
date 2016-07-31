@@ -141,6 +141,14 @@ void make_new_client(Window w, ScreenInfo *s) {
 				}
 				moveresize(c);
 				if (a->is_dock) c->is_dock = 1;
+#ifdef ABOVE
+				if (!above && a->above) {
+					above = c;
+					clients_tab_order = list_delete(clients_tab_order, c);
+					clients_mapping_order = list_delete(clients_mapping_order, c);
+					clients_stacking_order = list_delete(clients_stacking_order, c);
+				}
+#endif
 #ifdef VWM
 				if (a->vdesk != VDESK_NONE) c->vdesk = a->vdesk;
 #endif

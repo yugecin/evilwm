@@ -58,6 +58,10 @@ int          no_solid_drag = 0;  /* use solid drag by default */
 #endif
 struct list  *applications = NULL;
 
+#ifdef ABOVE
+Client      *above = NULL;
+#endif
+
 /* Client tracking information */
 struct list     *clients_tab_order = NULL;
 struct list     *clients_mapping_order = NULL;
@@ -71,6 +75,9 @@ int wm_exit;
 static void set_app(const char *arg);
 static void set_app_geometry(const char *arg);
 static void set_app_dock(void);
+#ifdef ABOVE
+static void set_app_above(void);
+#endif
 #ifdef VWM
 static void set_app_vdesk(const char *arg);
 static void set_app_fixed(void);
@@ -98,6 +105,9 @@ static struct xconfig_option evilwm_options[] = {
 	{ XCONFIG_CALL_1,   "geometry",     &set_app_geometry },
 	{ XCONFIG_CALL_1,   "g",            &set_app_geometry },
 	{ XCONFIG_CALL_0,   "dock",         &set_app_dock },
+#ifdef ABOVE
+	{ XCONFIG_CALL_0,   "above",        &set_app_above },
+#endif
 #ifdef VWM
 	{ XCONFIG_CALL_1,   "vdesk",        &set_app_vdesk },
 	{ XCONFIG_CALL_1,   "v",            &set_app_vdesk },
@@ -192,6 +202,11 @@ int main(int argc, char *argv[]) {
 	event_main_loop();
 
 	/* Quit Nicely */
+#ifdef ABOVE
+	if (above) {
+		remove_client(above);
+	}
+#endif
 	while (clients_stacking_order)
 		remove_client(clients_stacking_order->data);
 	XSetInputFocus(dpy, PointerRoot, RevertToPointerRoot, CurrentTime);
@@ -402,6 +417,15 @@ static void set_app_dock(void) {
 		app->is_dock = 1;
 	}
 }
+
+#ifdef ABOVE
+static void set_app_above(void) {
+	if (applications) {
+		Application *app = applications->data;
+		app->above = 1;
+	}
+}
+#endif
 
 #ifdef VWM
 static void set_app_vdesk(const char *arg) {

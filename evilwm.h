@@ -166,6 +166,9 @@ struct Application {
 	int x, y;
 	unsigned int width, height;
 	int is_dock;
+#ifdef ABOVE
+	int above;
+#endif
 #ifdef VWM
 	unsigned int vdesk;
 #endif
@@ -244,6 +247,9 @@ extern int              no_solid_drag;
 extern struct list      *applications;
 
 /* Client tracking information */
+#ifdef ABOVE
+extern Client           *above;
+#endif
 extern struct list      *clients_tab_order;
 extern struct list      *clients_mapping_order;
 extern struct list      *clients_stacking_order;
