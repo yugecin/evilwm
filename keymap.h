@@ -16,6 +16,7 @@
 #define KEY_INFO        XK_i
 #define KEY_MAXVERT     XK_equal
 #define KEY_MAX         XK_x
+#define KEY_MAXGAP      XK_c
 #define KEY_DOCK_TOGGLE XK_d
 #ifdef VWM
 # define KEY_FIX        XK_f

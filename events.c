@@ -144,6 +144,9 @@ static void handle_key_event(XKeyEvent *e) {
 		case KEY_MAXVERT:
 			maximise_client(c, NET_WM_STATE_TOGGLE, MAXIMISE_VERT);
 			break;
+		case KEY_MAXGAP:
+			maximise_client(c, NET_WM_STATE_TOGGLE, MAXIMISE_HORZ|MAXIMISE_VERT|MAXIMISE_GAPS);
+			break;
 #ifdef VWM
 		case KEY_FIX:
 			if (is_fixed(c)) {

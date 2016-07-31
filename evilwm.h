@@ -77,6 +77,7 @@ typedef struct {
 
 #define MAXIMISE_HORZ   (1<<0)
 #define MAXIMISE_VERT   (1<<1)
+#define MAXIMISE_GAPS   (1<<2)
 
 /* some coding shorthand */
 
@@ -295,6 +296,7 @@ void get_window_type(Client *c);
 void drag(Client *c);
 void moveresize(Client *c);
 void maximise_client(Client *c, int action, int hv);
+void apply_gaps(Client *c);
 void show_info(Client *c, unsigned int keycode);
 void sweep(Client *c);
 void next(void);
