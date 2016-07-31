@@ -14,11 +14,16 @@ evilwm \- Minimalist Window Manager for X
 [ \fB\-mask1\fP \fImodifiers\fP ]
 [ \fB\-mask2\fP \fImodifiers\fP ]
 [ \fB\-altmask\fP \fImodifier\fP ]
+[ \fB\-gap0\fP \fIsize\fP ]
+[ \fB\-gap1\fP \fIsize\fP ]
+[ \fB\-gap2\fP \fIsize\fP ]
+[ \fB\-gap3\fP \fIsize\fP ]
 [ [ \fB\-app\fP \fIname/class\fP ]
 [ \fB\-geometry\fP \fIgeometry\fP ]
 [ \fB\-dock\fP ]
 [ \fB\-vdesk\fP \fIvdesk\fP ]
-[ \fB\-fixed\fP ] ]...
+[ \fB\-fixed\fP ]
+[ \fB\-above\fP ] ]...
 [ \fB\-nosoliddrag\fP ]
 [ \fB\-V\fP ]
 .SH DESCRIPTION
@@ -73,6 +78,9 @@ Maximise current window vertically (toggle).
 .TP
 X
 Maximise current window (toggle).
+.TP
+C
+Maximise current window, but respect gaps (toggle).
 .TP
 D
 Toggle visible state of docks (e.g., pagers and launch bars).
@@ -141,10 +149,14 @@ Modifiers may be separated with + signs.
 Valid modifiers are shift, lock, control, alt, mod1, mod2, mod3, mod4,
 mod5.
 .TP
+\-gap0 \fIsize\fP, \-gap1 \fIsize\fP, \-gap2 \fIsize\fP, \-gap3 \fIsize\fP
+leave a gap when new windows open and when resizing using the key to resize while respecting gapsize.
+Gap location is top, right, bottom and left respectively.
+.TP
 \-app \fIname/class\fP
 match an application by instance name and class (for help in finding
 these, use the \fBxprop\fP tool to extract the \fIWM_CLASS\fP property).
-Subsequent \fI\-geometry\fP, \fI\-dock\fP, \fI\-vdesk\fP and \fI\-fixed\fP
+Subsequent \fI\-geometry\fP, \fI\-dock\fP, \fI\-vdesk\fP, \fI\-fixed\fP and \fI\-above\fP
 options will apply to this match.
 .TP
 \-g, -geometry \fIgeometry\fP
@@ -164,6 +176,10 @@ Note that desktops are numbered from 0.
 \-f, -fixed
 specify that application is to start with a fixed client window (\fI\-s\fP is
 also accepted to be compatible with previous versions).
+.TP
+\-above
+specify that application should always stay above other windows.
+Can only be applied to a single app.
 .TP
 \-nosoliddrag
 draw a window outline while moving or resizing.
