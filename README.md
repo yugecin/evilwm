@@ -6,6 +6,6 @@ evilwm 1.1 by Ciaran Anscomb <evilwm@6809.org.uk>
 evilwm is a minimalist window manager for the X Window System.
 [6809.org.uk/evilwm](http://www.6809.org.uk/evilwm)
 
-[Original README](/README)
+[Original README + license](/README)
 [Changelog](/Changelog) (does not contain my changes)
 
