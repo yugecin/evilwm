@@ -1,3 +1,9 @@
+Currently added stuff:
+ * gaps (config: gap0 gap1 gap2 gap3: top right bottom left)
+
+[Changelog](/Changelog) (does not contain my changes)
+---
+
 evilwm 1.1 by Ciaran Anscomb <evilwm@6809.org.uk>
 
 evilwm is a minimalist window manager for the X Window System.
