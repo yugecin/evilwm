@@ -547,6 +547,12 @@ void event_main_loop(void) {
 			}
 		}
 		if (need_client_tidy) {
+#ifdef ABOVE
+			if (above && above->remove) {
+				remove_client(above);
+				above = NULL;
+			}
+#endif
 			struct list *iter, *niter;
 			need_client_tidy = 0;
 			for (iter = clients_tab_order; iter; iter = niter) {

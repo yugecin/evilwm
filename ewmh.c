@@ -294,6 +294,11 @@ void ewmh_set_net_client_list(ScreenInfo *s) {
 			windows[i++] = c->window;
 		}
 	}
+#ifdef ABOVE
+	if (above) {
+		windows[i] = above->window;
+	}
+#endif
 	XChangeProperty(dpy, s->root, xa_net_client_list,
 			XA_WINDOW, 32, PropModeReplace,
 			(unsigned char *)windows, i);
@@ -309,6 +314,11 @@ void ewmh_set_net_client_list_stacking(ScreenInfo *s) {
 			windows[i++] = c->window;
 		}
 	}
+#ifdef ABOVE
+	if (above) {
+		windows[i] = above->window;
+	}
+#endif
 	XChangeProperty(dpy, s->root, xa_net_client_list_stacking,
 			XA_WINDOW, 32, PropModeReplace,
 			(unsigned char *)windows, i);
@@ -393,6 +403,11 @@ static Window *alloc_window_array(void) {
 	for (iter = clients_mapping_order; iter; iter = iter->next) {
 		count++;
 	}
+#ifdef ABOVE
+	if (above) {
+		count++;
+	}
+#endif
 	if (count == 0) count++;
 	/* Round up to next block of 128 */
 	count = (count + 127) & ~127;

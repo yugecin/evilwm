@@ -17,6 +17,11 @@ static int send_xmessage(Window w, Atom a, long x);
 Client *find_client(Window w) {
 	struct list *iter;
 
+#ifdef ABOVE
+	if (above && (w == above->parent || w == above->window)) {
+		return above;
+	}
+#endif
 	for (iter = clients_tab_order; iter; iter = iter->next) {
 		Client *c = iter->data;
 		if (w == c->parent || w == c->window)
@@ -39,10 +44,20 @@ void client_show(Client *c) {
 void client_raise(Client *c) {
 	XRaiseWindow(dpy, c->parent);
 	clients_stacking_order = list_to_tail(clients_stacking_order, c);
+#ifdef ABOVE
+	if (above) {
+		XRaiseWindow(dpy, above->parent);
+	}
+#endif
 	ewmh_set_net_client_list_stacking(c->screen);
 }
 
 void client_lower(Client *c) {
+#ifdef ABOVE
+	if (above && above == c) {
+		return;
+	}
+#endif
 	XLowerWindow(dpy, c->parent);
 	clients_stacking_order = list_to_head(clients_stacking_order, c);
 	ewmh_set_net_client_list_stacking(c->screen);
