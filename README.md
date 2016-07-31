@@ -1,4 +1,5 @@
 Currently added stuff:
+ * above: flag for a single app to always stay on top. Usefull for a panel, conky etc
  * gaps: usefull for panels etc, config params: gap0 gap1 gap2 gap3 (top right bottom left)
  * keybind to maximize window, while respecting gaps: C
 
