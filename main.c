@@ -47,6 +47,10 @@ unsigned int grabmask2 = Mod1Mask;
 unsigned int altmask = ShiftMask;
 static const char *const def_term[] = { DEF_TERM, NULL };
 char **opt_term = (char **)def_term;
+int          opt_gap0 = 0;
+int          opt_gap1 = 0;
+int          opt_gap2 = 0;
+int          opt_gap3 = 0;
 int          opt_bw = DEF_BW;
 int          opt_snap = 0;
 #ifdef SOLIDDRAG
@@ -80,6 +84,10 @@ static struct xconfig_option evilwm_options[] = {
 #ifdef VWM
 	{ XCONFIG_STRING,   "fc",           &opt_fc },
 #endif
+	{ XCONFIG_INT,      "gap0",         &opt_gap0 },
+	{ XCONFIG_INT,      "gap1",         &opt_gap1 },
+	{ XCONFIG_INT,      "gap2",         &opt_gap2 },
+	{ XCONFIG_INT,      "gap3",         &opt_gap3 },
 	{ XCONFIG_INT,      "bw",           &opt_bw },
 	{ XCONFIG_STR_LIST, "term",         &opt_term },
 	{ XCONFIG_INT,      "snap",         &opt_snap },

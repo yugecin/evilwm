@@ -90,6 +90,8 @@ void make_new_client(Window w, ScreenInfo *s) {
 	update_window_type_flags(c, window_type);
 	init_geometry(c);
 
+	apply_gaps(c);
+
 #ifdef DEBUG
 	{
 		struct list *iter;

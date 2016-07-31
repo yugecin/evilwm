@@ -394,10 +394,41 @@ void maximise_client(Client *c, int action, int hv) {
 			}
 		}
 	}
+	if (hv & MAXIMISE_GAPS) {
+		apply_gaps(c);
+	}
 	ewmh_set_net_wm_state(c);
 	moveresize(c);
 	discard_enter_events(c);
 }
+
+void apply_gaps(Client *c) {
+	// do gaps, dirty
+	int overlap;
+	if(c->y < opt_gap0) {
+		c->y = opt_gap0;
+	}
+	if(c->x < opt_gap3) {
+		c->x = opt_gap3;
+	}
+	overlap = c->y + c->height - (DisplayHeight(dpy, c->screen->screen) - opt_gap2);
+	while(overlap-- > 0) {
+		if(c->y > opt_gap0) {
+			c->y--;
+		} else {
+			c->height--;
+		}
+	}
+	overlap = c->x + c->width - (DisplayWidth(dpy, c->screen->screen) - opt_gap1);
+	while(overlap-- > 0) {
+		if(c->x > opt_gap3) {
+			c->x--;
+		} else {
+			c->width--;
+		}
+	}
+}
+
 
 void next(void) {
 	struct list *newl = list_find(clients_tab_order, current);
@@ -542,7 +573,7 @@ static KeySym keys_to_grab[] = {
 	KEY_NEW, KEY_KILL,
 	KEY_TOPLEFT, KEY_TOPRIGHT, KEY_BOTTOMLEFT, KEY_BOTTOMRIGHT,
 	KEY_LEFT, KEY_RIGHT, KEY_DOWN, KEY_UP,
-	KEY_LOWER, KEY_ALTLOWER, KEY_INFO, KEY_MAXVERT, KEY_MAX,
+	KEY_LOWER, KEY_ALTLOWER, KEY_INFO, KEY_MAXVERT, KEY_MAX, KEY_MAXGAP,
 	KEY_DOCK_TOGGLE
 };
 #define NUM_GRABS (int)(sizeof(keys_to_grab) / sizeof(KeySym))
