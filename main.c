@@ -59,7 +59,7 @@ int          no_solid_drag = 0;  /* use solid drag by default */
 struct list  *applications = NULL;
 
 #ifdef ABOVE
-Client      *above = NULL;
+struct list     *clients_above = NULL;
 #endif
 
 /* Client tracking information */
@@ -204,8 +204,9 @@ int main(int argc, char *argv[]) {
 
 	/* Quit Nicely */
 #ifdef ABOVE
-	if (above) {
-		remove_client(above);
+	while (clients_above) {
+		Client *cur = clients_above->data;
+		clients_above = list_delete(clients_above, cur);
 	}
 #endif
 	while (clients_stacking_order)

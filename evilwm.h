@@ -250,7 +250,7 @@ extern struct list      *applications;
 
 /* Client tracking information */
 #ifdef ABOVE
-extern Client           *above;
+extern struct list      *clients_above;
 #endif
 extern struct list      *clients_tab_order;
 extern struct list      *clients_mapping_order;

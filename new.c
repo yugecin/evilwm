@@ -147,8 +147,8 @@ void make_new_client(Window w, ScreenInfo *s) {
 					c->skiptab = 1;
 				}
 #ifdef ABOVE
-				if (!above && a->above) {
-					above = c;
+				if (a->above) {
+					clients_above = list_prepend(clients_above, c);
 					isabove = 1;
 				}
 #endif

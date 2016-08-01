@@ -295,8 +295,11 @@ void ewmh_set_net_client_list(ScreenInfo *s) {
 		}
 	}
 #ifdef ABOVE
-	if (above) {
-		windows[i] = above->window;
+	for (iter = clients_above; iter; iter = iter->next) {
+		Client *c = iter->data;
+		if (c->screen == s) {
+			windows[i++] = c->window;
+		}
 	}
 #endif
 	XChangeProperty(dpy, s->root, xa_net_client_list,
@@ -315,8 +318,11 @@ void ewmh_set_net_client_list_stacking(ScreenInfo *s) {
 		}
 	}
 #ifdef ABOVE
-	if (above) {
-		windows[i] = above->window;
+	for (iter = clients_above; iter; iter = iter->next) {
+		Client *c = iter->data;
+		if (c->screen == s) {
+			windows[i++] = c->window;
+		}
 	}
 #endif
 	XChangeProperty(dpy, s->root, xa_net_client_list_stacking,
@@ -404,9 +410,8 @@ static Window *alloc_window_array(void) {
 		count++;
 	}
 #ifdef ABOVE
-	if (above) {
+	for (iter = clients_above; iter; iter = iter->next)
 		count++;
-	}
 #endif
 	if (count == 0) count++;
 	/* Round up to next block of 128 */
