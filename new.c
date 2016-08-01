@@ -76,6 +76,7 @@ void make_new_client(Window w, ScreenInfo *s) {
 	c->window = w;
 	c->ignore_unmap = 0;
 	c->remove = 0;
+	c->skiptab = 0;
 
 	/* Ungrab the X server as soon as possible. Now that the client is
 	 * malloc()ed and attached to the list, it is safe for any subsequent
@@ -113,7 +114,6 @@ void make_new_client(Window w, ScreenInfo *s) {
 #ifdef ABOVE
 	int isabove = 0;
 #endif
-	int skiptab = 0;
 
 	/* Read instance/class information for client and check against list
 	 * built with -app options */
@@ -143,7 +143,9 @@ void make_new_client(Window w, ScreenInfo *s) {
 				}
 				moveresize(c);
 				if (a->is_dock) c->is_dock = 1;
-				skiptab = a->skiptab;
+				if (a->skiptab) {
+					c->skiptab = 1;
+				}
 #ifdef ABOVE
 				if (!above && a->above) {
 					above = c;
@@ -163,9 +165,7 @@ void make_new_client(Window w, ScreenInfo *s) {
 #ifdef ABOVE
 	if (!isabove) {
 #endif
-	if (!skiptab) {
-		clients_tab_order = list_prepend(clients_tab_order, c);
-	}
+	clients_tab_order = list_prepend(clients_tab_order, c);
 	clients_mapping_order = list_append(clients_mapping_order, c);
 	clients_stacking_order = list_append(clients_stacking_order, c);
 #ifdef ABOVE
