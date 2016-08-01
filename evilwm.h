@@ -178,6 +178,8 @@ struct Application {
 
 /* Declarations for global variables in main.c */
 
+extern int doabove;
+
 /* Commonly used X information */
 extern Display      *dpy;
 extern XFontStruct  *font;

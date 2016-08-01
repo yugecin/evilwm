@@ -59,6 +59,7 @@ int          no_solid_drag = 0;  /* use solid drag by default */
 struct list  *applications = NULL;
 
 #ifdef ABOVE
+int doabove = 1;
 struct list     *clients_above = NULL;
 #endif
 

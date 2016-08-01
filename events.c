@@ -49,6 +49,11 @@ static void handle_key_event(XKeyEvent *e) {
 		case KEY_DOCK_TOGGLE:
 			set_docks_visible(current_screen, !current_screen->docks_visible);
 			break;
+#ifdef ABOVE
+		case KEY_ABOVE_TOGGL:
+			doabove ^= 1;
+			break;
+#endif
 #ifdef VWM
 		case XK_1: case XK_2: case XK_3: case XK_4:
 		case XK_5: case XK_6: case XK_7: case XK_8:

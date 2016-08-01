@@ -18,6 +18,9 @@
 #define KEY_MAX         XK_x
 #define KEY_MAXGAP      XK_c
 #define KEY_DOCK_TOGGLE XK_d
+#ifdef ABOVE
+#define KEY_ABOVE_TOGGL XK_z
+#endif
 #ifdef VWM
 # define KEY_FIX        XK_f
 # define KEY_PREVDESK   XK_Left

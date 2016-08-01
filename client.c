@@ -47,11 +47,13 @@ void client_raise(Client *c) {
 	XRaiseWindow(dpy, c->parent);
 	clients_stacking_order = list_to_tail(clients_stacking_order, c);
 #ifdef ABOVE
-	// this may get heavy
-	struct list *iter;
-	for (iter = clients_above; iter; iter = iter->next) {
-		Client *cur = iter->data;
-		XRaiseWindow(dpy, cur->parent);
+	if (doabove) {
+		// this may get heavy
+		struct list *iter;
+		for (iter = clients_above; iter; iter = iter->next) {
+			Client *cur = iter->data;
+			XRaiseWindow(dpy, cur->parent);
+		}
 	}
 #endif
 	ewmh_set_net_client_list_stacking(c->screen);
