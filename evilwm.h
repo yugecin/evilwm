@@ -166,6 +166,7 @@ struct Application {
 	int x, y;
 	unsigned int width, height;
 	int is_dock;
+	int skiptab;
 #ifdef ABOVE
 	int above;
 #endif

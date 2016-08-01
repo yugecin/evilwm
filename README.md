@@ -1,4 +1,5 @@
 Currently added stuff:
+ * skiptab: flag for apps to not alt-tab to this app. Usefull for panels, docks, conkies etc
  * above: flag for a single app to always stay on top. Usefull for a panel, conky etc
  * gaps: usefull for panels etc, config params: gap0 gap1 gap2 gap3 (top right bottom left)
  * keybind to maximize window, while respecting gaps: C

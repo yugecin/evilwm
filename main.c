@@ -75,6 +75,7 @@ int wm_exit;
 static void set_app(const char *arg);
 static void set_app_geometry(const char *arg);
 static void set_app_dock(void);
+static void set_app_skiptab(void);
 #ifdef ABOVE
 static void set_app_above(void);
 #endif
@@ -82,7 +83,6 @@ static void set_app_above(void);
 static void set_app_vdesk(const char *arg);
 static void set_app_fixed(void);
 #endif
-
 static struct xconfig_option evilwm_options[] = {
 	{ XCONFIG_STRING,   "fn",           &opt_font },
 	{ XCONFIG_STRING,   "display",      &opt_display },
@@ -105,6 +105,7 @@ static struct xconfig_option evilwm_options[] = {
 	{ XCONFIG_CALL_1,   "geometry",     &set_app_geometry },
 	{ XCONFIG_CALL_1,   "g",            &set_app_geometry },
 	{ XCONFIG_CALL_0,   "dock",         &set_app_dock },
+	{ XCONFIG_CALL_0,   "skiptab",      &set_app_skiptab },
 #ifdef ABOVE
 	{ XCONFIG_CALL_0,   "above",        &set_app_above },
 #endif
@@ -415,6 +416,13 @@ static void set_app_dock(void) {
 	if (applications) {
 		Application *app = applications->data;
 		app->is_dock = 1;
+	}
+}
+
+static void set_app_skiptab(void) {
+	if (applications) {
+		Application *app = applications->data;
+		app->skiptab = 1;
 	}
 }
 

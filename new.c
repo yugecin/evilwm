@@ -71,9 +71,6 @@ void make_new_client(Window w, ScreenInfo *s) {
 		XUngrabServer(dpy);
 		return;
 	}
-	clients_tab_order = list_prepend(clients_tab_order, c);
-	clients_mapping_order = list_append(clients_mapping_order, c);
-	clients_stacking_order = list_append(clients_stacking_order, c);
 
 	c->screen = s;
 	c->window = w;
@@ -113,6 +110,11 @@ void make_new_client(Window w, ScreenInfo *s) {
 	}
 #endif
 
+#ifdef ABOVE
+	int isabove = 0;
+#endif
+	int skiptab = 0;
+
 	/* Read instance/class information for client and check against list
 	 * built with -app options */
 	class = XAllocClassHint();
@@ -141,12 +143,11 @@ void make_new_client(Window w, ScreenInfo *s) {
 				}
 				moveresize(c);
 				if (a->is_dock) c->is_dock = 1;
+				skiptab = a->skiptab;
 #ifdef ABOVE
 				if (!above && a->above) {
 					above = c;
-					clients_tab_order = list_delete(clients_tab_order, c);
-					clients_mapping_order = list_delete(clients_mapping_order, c);
-					clients_stacking_order = list_delete(clients_stacking_order, c);
+					isabove = 1;
 				}
 #endif
 #ifdef VWM
@@ -159,6 +160,18 @@ void make_new_client(Window w, ScreenInfo *s) {
 		XFree(class->res_class);
 		XFree(class);
 	}
+#ifdef ABOVE
+	if (!isabove) {
+#endif
+	if (!skiptab) {
+		clients_tab_order = list_prepend(clients_tab_order, c);
+	}
+	clients_mapping_order = list_append(clients_mapping_order, c);
+	clients_stacking_order = list_append(clients_stacking_order, c);
+#ifdef ABOVE
+	}
+#endif
+
 	ewmh_init_client(c);
 	ewmh_set_net_client_list(c->screen);
 	ewmh_set_net_client_list_stacking(c->screen);
