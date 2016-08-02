@@ -77,6 +77,7 @@ void make_new_client(Window w, ScreenInfo *s) {
 	c->ignore_unmap = 0;
 	c->remove = 0;
 	c->skiptab = 0;
+	c->isabove = 0;
 
 	/* Ungrab the X server as soon as possible. Now that the client is
 	 * malloc()ed and attached to the list, it is safe for any subsequent
@@ -109,10 +110,6 @@ void make_new_client(Window w, ScreenInfo *s) {
 		XShapeSelectInput(dpy, c->window, ShapeNotifyMask);
 		set_shape(c);
 	}
-#endif
-
-#ifdef ABOVE
-	int isabove = 0;
 #endif
 
 	/* Read instance/class information for client and check against list
@@ -148,8 +145,7 @@ void make_new_client(Window w, ScreenInfo *s) {
 				}
 #ifdef ABOVE
 				if (a->above) {
-					clients_above = list_prepend(clients_above, c);
-					isabove = 1;
+					c->isabove = 1;
 				}
 #endif
 #ifdef VWM
@@ -162,15 +158,9 @@ void make_new_client(Window w, ScreenInfo *s) {
 		XFree(class->res_class);
 		XFree(class);
 	}
-#ifdef ABOVE
-	if (!isabove) {
-#endif
 	clients_tab_order = list_prepend(clients_tab_order, c);
 	clients_mapping_order = list_append(clients_mapping_order, c);
 	clients_stacking_order = list_append(clients_stacking_order, c);
-#ifdef ABOVE
-	}
-#endif
 
 	ewmh_init_client(c);
 	ewmh_set_net_client_list(c->screen);

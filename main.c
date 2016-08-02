@@ -60,7 +60,6 @@ struct list  *applications = NULL;
 
 #ifdef ABOVE
 int doabove = 1;
-struct list     *clients_above = NULL;
 #endif
 
 /* Client tracking information */
@@ -204,12 +203,6 @@ int main(int argc, char *argv[]) {
 	event_main_loop();
 
 	/* Quit Nicely */
-#ifdef ABOVE
-	while (clients_above) {
-		Client *cur = clients_above->data;
-		clients_above = list_delete(clients_above, cur);
-	}
-#endif
 	while (clients_stacking_order)
 		remove_client(clients_stacking_order->data);
 	XSetInputFocus(dpy, PointerRoot, RevertToPointerRoot, CurrentTime);

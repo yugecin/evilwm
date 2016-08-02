@@ -290,14 +290,14 @@ void ewmh_set_net_client_list(ScreenInfo *s) {
 	int i = 0;
 	for (iter = clients_mapping_order; iter; iter = iter->next) {
 		Client *c = iter->data;
-		if (c->screen == s) {
+		if (c->screen == s && !c->isabove) {
 			windows[i++] = c->window;
 		}
 	}
 #ifdef ABOVE
-	for (iter = clients_above; iter; iter = iter->next) {
+	for (iter = clients_mapping_order; iter; iter = iter->next) {
 		Client *c = iter->data;
-		if (c->screen == s) {
+		if (c->isabove && c->screen == s) {
 			windows[i++] = c->window;
 		}
 	}
@@ -313,14 +313,14 @@ void ewmh_set_net_client_list_stacking(ScreenInfo *s) {
 	int i = 0;
 	for (iter = clients_stacking_order; iter; iter = iter->next) {
 		Client *c = iter->data;
-		if (c->screen == s) {
+		if (c->screen == s && !c->isabove) {
 			windows[i++] = c->window;
 		}
 	}
 #ifdef ABOVE
-	for (iter = clients_above; iter; iter = iter->next) {
+	for (iter = clients_stacking_order; iter; iter = iter->next) {
 		Client *c = iter->data;
-		if (c->screen == s) {
+		if (c->isabove && c->screen == s) {
 			windows[i++] = c->window;
 		}
 	}
@@ -409,10 +409,6 @@ static Window *alloc_window_array(void) {
 	for (iter = clients_mapping_order; iter; iter = iter->next) {
 		count++;
 	}
-#ifdef ABOVE
-	for (iter = clients_above; iter; iter = iter->next)
-		count++;
-#endif
 	if (count == 0) count++;
 	/* Round up to next block of 128 */
 	count = (count + 127) & ~127;

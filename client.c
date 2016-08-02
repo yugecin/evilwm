@@ -17,13 +17,6 @@ static int send_xmessage(Window w, Atom a, long x);
 Client *find_client(Window w) {
 	struct list *iter;
 
-#ifdef ABOVE
-	for (iter = clients_above; iter; iter = iter->next) {
-		Client *c = iter->data;
-		if (w == c->parent || w == c->window)
-			return c;
-	}
-#endif
 	for (iter = clients_tab_order; iter; iter = iter->next) {
 		Client *c = iter->data;
 		if (w == c->parent || w == c->window)
@@ -50,9 +43,12 @@ void client_raise(Client *c) {
 	if (doabove) {
 		// this may get heavy
 		struct list *iter;
-		for (iter = clients_above; iter; iter = iter->next) {
+		for (iter = clients_stacking_order; iter; iter = iter->next) {
 			Client *cur = iter->data;
-			XRaiseWindow(dpy, cur->parent);
+			if (cur->isabove) {
+				XRaiseWindow(dpy, cur->parent);
+				clients_stacking_order = list_to_tail(clients_stacking_order, c);
+			}
 		}
 	}
 #endif

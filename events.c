@@ -560,14 +560,6 @@ void event_main_loop(void) {
 				if (c->remove)
 					remove_client(c);
 			}
-#ifdef ABOVE
-			for (iter = clients_above; iter; iter = niter) {
-				Client *c = iter->data;
-				niter = iter->next;
-				if (c->remove)
-					remove_client(c);
-			}
-#endif
 		}
 	}
 }

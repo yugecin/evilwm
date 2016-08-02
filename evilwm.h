@@ -156,6 +156,7 @@ struct Client {
 #endif
 	int             is_dock;
 	int		skiptab;
+	int             isabove;
 	int             remove;  /* set when client needs to be removed */
 };
 
