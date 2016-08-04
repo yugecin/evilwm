@@ -396,8 +396,10 @@ void ewmh_set_net_wm_state(Client *c) {
 		state[i++] = xa_net_wm_state_maximized_vert;
 	if (c->oldw)
 		state[i++] = xa_net_wm_state_maximized_horz;
+#ifndef NOMAXIMISE
 	if (c->oldh && c->oldw)
 		state[i++] = xa_net_wm_state_fullscreen;
+#endif
 	XChangeProperty(dpy, c->window, xa_net_wm_state,
 			XA_ATOM, 32, PropModeReplace,
 			(unsigned char *)&state, i);

@@ -43,6 +43,9 @@ OPT_CPPFLAGS += -DVWM
 # Uncomment to support aboveall.
 OPT_CPPFLAGS += -DABOVE
 
+# Uncomment to not set fullscreen state when maximizing
+OPT_CPPFLAGS += -DNOMAXIMISE
+
 # Uncomment to move pointer around on certain actions.
 #OPT_CPPFLAGS += -DWARP_POINTER
 
