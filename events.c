@@ -537,6 +537,10 @@ void event_main_loop(void) {
 				handle_mappingnotify_event(&ev.xevent.xmapping); break;
 			case ClientMessage:
 				handle_client_message(&ev.xevent.xclient); break;
+#ifdef ABOVE
+			case FocusIn:
+				do_above(); break;
+#endif
 			default:
 #ifdef SHAPE
 				if (have_shape && ev.xevent.type == shape_event) {

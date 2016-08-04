@@ -40,6 +40,13 @@ void client_raise(Client *c) {
 	XRaiseWindow(dpy, c->parent);
 	clients_stacking_order = list_to_tail(clients_stacking_order, c);
 #ifdef ABOVE
+	do_above();
+#endif
+	ewmh_set_net_client_list_stacking(c->screen);
+}
+
+#ifdef ABOVE
+void do_above(void) {
 	if (doabove) {
 		// this may get heavy
 		struct list *iter;
@@ -47,13 +54,11 @@ void client_raise(Client *c) {
 			Client *cur = iter->data;
 			if (cur->isabove) {
 				XRaiseWindow(dpy, cur->parent);
-				clients_stacking_order = list_to_tail(clients_stacking_order, c);
 			}
 		}
 	}
-#endif
-	ewmh_set_net_client_list_stacking(c->screen);
 }
+#endif
 
 void client_lower(Client *c) {
 	XLowerWindow(dpy, c->parent);

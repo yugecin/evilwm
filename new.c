@@ -101,7 +101,11 @@ void make_new_client(Window w, ScreenInfo *s) {
 	}
 #endif
 
-	XSelectInput(dpy, c->window, ColormapChangeMask | EnterWindowMask | PropertyChangeMask);
+	int mask = ColormapChangeMask | EnterWindowMask | PropertyChangeMask;
+#ifdef ABOVE
+	mask |= FocusChangeMask;
+#endif
+	XSelectInput(dpy, c->window, mask);
 
 	reparent(c);
 

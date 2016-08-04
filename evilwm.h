@@ -270,6 +270,9 @@ Client *find_client(Window w);
 void client_hide(Client *c);
 void client_show(Client *c);
 void client_raise(Client *c);
+#ifdef ABOVE
+void do_above(void);
+#endif
 void client_lower(Client *c);
 void gravitate_border(Client *c, int bw);
 void select_client(Client *c);
