@@ -77,7 +77,9 @@ void make_new_client(Window w, ScreenInfo *s) {
 	c->ignore_unmap = 0;
 	c->remove = 0;
 	c->skiptab = 0;
+#ifdef ABOVE
 	c->isabove = 0;
+#endif
 
 	/* Ungrab the X server as soon as possible. Now that the client is
 	 * malloc()ed and attached to the list, it is safe for any subsequent

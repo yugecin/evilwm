@@ -156,7 +156,9 @@ struct Client {
 #endif
 	int             is_dock;
 	int		skiptab;
+#ifdef ABOVE
 	int             isabove;
+#endif
 	int             remove;  /* set when client needs to be removed */
 };
 
@@ -179,7 +181,9 @@ struct Application {
 
 /* Declarations for global variables in main.c */
 
+#ifdef ABOVE
 extern int doabove;
+#endif
 
 /* Commonly used X information */
 extern Display      *dpy;
@@ -252,9 +256,6 @@ extern int              no_solid_drag;
 extern struct list      *applications;
 
 /* Client tracking information */
-#ifdef ABOVE
-extern struct list      *clients_above;
-#endif
 extern struct list      *clients_tab_order;
 extern struct list      *clients_mapping_order;
 extern struct list      *clients_stacking_order;

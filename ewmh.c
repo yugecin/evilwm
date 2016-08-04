@@ -290,7 +290,11 @@ void ewmh_set_net_client_list(ScreenInfo *s) {
 	int i = 0;
 	for (iter = clients_mapping_order; iter; iter = iter->next) {
 		Client *c = iter->data;
+#ifdef ABOVE
 		if (c->screen == s && !c->isabove) {
+#else
+		if (c->screen == s) {
+#endif
 			windows[i++] = c->window;
 		}
 	}
@@ -313,7 +317,11 @@ void ewmh_set_net_client_list_stacking(ScreenInfo *s) {
 	int i = 0;
 	for (iter = clients_stacking_order; iter; iter = iter->next) {
 		Client *c = iter->data;
+#ifdef ABOVE
 		if (c->screen == s && !c->isabove) {
+#else
+		if (c->screen == s) {
+#endif
 			windows[i++] = c->window;
 		}
 	}
