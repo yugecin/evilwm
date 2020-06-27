@@ -274,6 +274,7 @@ static void snap_client(Client *c) {
 
 void drag(Client *c) {
 	XEvent ev;
+	int hv;
 	int x1, y1;
 	int old_cx = c->x;
 	int old_cy = c->y;
@@ -298,6 +299,18 @@ void drag(Client *c) {
 					draw_outline(c); /* clear */
 					XUngrabServer(dpy);
 				}
+
+				hv = 0;
+				if (c->oldh) {
+					hv |= MAXIMISE_VERT;
+				}
+				if (c->oldw) {
+					hv |= MAXIMISE_HORZ;
+				}
+				if (hv) {
+					maximise_client(c, NET_WM_STATE_REMOVE, hv);
+				}
+
 				c->x = old_cx + (ev.xmotion.x - x1);
 				c->y = old_cy + (ev.xmotion.y - y1);
 				if (opt_snap && !(ev.xmotion.state & altmask))

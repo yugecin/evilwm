@@ -5,7 +5,8 @@ Currently added stuff:
  * keybind to maximize window, while respecting gaps: C this cycles between the sets of gaps given and non-maximized
 
 Changelog:
- * removed -gap0 -gap1 -gap2 -gap3 in favor of -gaps
+ * 20200627: dragging a maximized client will restore it
+ * 20200627: removed -gap0 -gap1 -gap2 -gap3 in favor of -gaps
 
 evilwm 1.1 by Ciaran Anscomb <evilwm@6809.org.uk>  
 evilwm is a minimalist window manager for the X Window System.  
