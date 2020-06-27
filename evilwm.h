@@ -311,7 +311,7 @@ void drag(Client *c);
 void moveresize(Client *c);
 void maximise_client(Client *c, int action, int hv);
 void show_info(Client *c, unsigned int keycode);
-void sweep(Client *c);
+void sweep(int mouse_rel_x, int mouse_rel_y, Client *c);
 void next(void);
 #ifdef VWM
 void switch_vdesk(ScreenInfo *s, unsigned int v);

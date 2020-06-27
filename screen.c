@@ -90,35 +90,58 @@ static void draw_outline(Client *c) {
 #endif  /* ndef INFOBANNER_MOVERESIZE */
 }
 
-static void recalculate_sweep(Client *c, int x1, int y1, int x2, int y2, unsigned force) {
-	if (force || c->oldw == 0) {
+#define SWEEP_MODE_BOTR 0
+#define SWEEP_MODE_BOTL 1
+#define SWEEP_MODE_TOPR 2
+#define SWEEP_MODE_TOPL 3
+
+static void recalculate_sweep(Client *c, int mode, int minx, int miny, int maxx, int maxy, unsigned force) {
+	int d;
+
+	if (maxx > minx && (force || c->oldw == 0)) {
 		c->oldw = 0;
-		c->width = abs(x1 - x2);
-		c->width -= (c->width - c->base_width) % c->width_inc;
+		c->x = minx;
+		c->width = abs(minx - maxx);
+		d = (c->width - c->base_width) % c->width_inc;
+		c->width -= d;
+		if (mode & 1) {
+			c->x += d;
+		}
 		if (c->min_width && c->width < c->min_width)
 			c->width = c->min_width;
 		if (c->max_width && c->width > c->max_width)
 			c->width = c->max_width;
-		c->x = (x1 <= x2) ? x1 : x1 - c->width;
 	}
-	if (force || c->oldh == 0)  {
+	if (maxy > miny && (force || c->oldh == 0))  {
 		c->oldh = 0;
-		c->height = abs(y1 - y2);
-		c->height -= (c->height - c->base_height) % c->height_inc;
+		c->y = miny;
+		c->height = abs(miny - maxy);
+		d = (c->height - c->base_height) % c->height_inc;
+		c->height -= d;
+		if (mode & 2) {
+			c->y += d;
+		}
 		if (c->min_height && c->height < c->min_height)
 			c->height = c->min_height;
 		if (c->max_height && c->height > c->max_height)
 			c->height = c->max_height;
-		c->y = (y1 <= y2) ? y1 : y1 - c->height;
 	}
 }
 
-void sweep(Client *c) {
+void sweep(int mouse_rel_x, int mouse_rel_y, Client *c) {
 	XEvent ev;
-	int old_cx = c->x;
-	int old_cy = c->y;
+	int mode;
+	int *minx, *maxx, *miny, *maxy, minmax_1, minmax_2;
 
 	if (!grab_pointer(c->screen->root, MouseMask, resize_curs)) return;
+
+	mode = 0;
+	if (mouse_rel_x < c->width / 2) {
+		mode += 1;
+	}
+	if (mouse_rel_y < c->height / 2) {
+		mode += 2;
+	}
 
 	client_raise(c);
 #ifdef INFOBANNER_MOVERESIZE
@@ -127,7 +150,40 @@ void sweep(Client *c) {
 	XGrabServer(dpy);
 	draw_outline(c);
 
-	setmouse(c->window, c->width, c->height);
+	switch (mode) {
+	case SWEEP_MODE_BOTR:
+		setmouse(c->window, c->width, c->height);
+		minx = &c->x;
+		miny = &c->y;
+		maxx = &ev.xmotion.x;
+		maxy = &ev.xmotion.y;
+		break;
+	case SWEEP_MODE_BOTL:
+		setmouse(c->window, 0, c->height);
+		minx = &ev.xmotion.x;
+		miny = &c->y;
+		minmax_1 = c->x + c->width;
+		maxx = &minmax_1;
+		maxy = &ev.xmotion.y;
+		break;
+	case SWEEP_MODE_TOPR:
+		setmouse(c->window, c->width, 0);
+		minx = &c->x;
+		miny = &ev.xmotion.y;
+		maxx = &ev.xmotion.x;
+		minmax_1 = c->y + c->height;
+		maxy = &minmax_1;
+		break;
+	case SWEEP_MODE_TOPL:
+		setmouse(c->window, 0, 0);
+		minx = &ev.xmotion.x;
+		miny = &ev.xmotion.y;
+		minmax_1 = c->x + c->width;
+		maxx = &minmax_1;
+		minmax_2 = c->y + c->height;
+		maxy = &minmax_2;
+		break;
+	}
 	for (;;) {
 		XMaskEvent(dpy, MouseMask, &ev);
 		switch (ev.type) {
@@ -136,7 +192,7 @@ void sweep(Client *c) {
 					break;
 				draw_outline(c); /* clear */
 				XUngrabServer(dpy);
-				recalculate_sweep(c, old_cx, old_cy, ev.xmotion.x, ev.xmotion.y, ev.xmotion.state & altmask);
+				recalculate_sweep(c, mode, *minx, *miny, *maxx, *maxy, ev.xmotion.state & altmask);
 #ifdef INFOBANNER_MOVERESIZE
 				update_info_window(c);
 #endif
