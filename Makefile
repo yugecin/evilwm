@@ -17,6 +17,9 @@ desktopfilesdir = $(datarootdir)/applications
 ############################################################################
 # Features
 
+# Uncomment to enable resizing towards all directions when holding Ctrl+Alt+Mouse3
+#OPT_CPPFLAGS += -DSWEEP_ALL_DIRECTIONS
+
 # Uncomment to enable info banner on holding Ctrl+Alt+I.
 OPT_CPPFLAGS += -DINFOBANNER
 

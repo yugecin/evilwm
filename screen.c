@@ -131,17 +131,22 @@ static void recalculate_sweep(Client *c, int mode, int minx, int miny, int maxx,
 void sweep(int mouse_rel_x, int mouse_rel_y, Client *c) {
 	XEvent ev;
 	int mode;
-	int *minx, *maxx, *miny, *maxy, minmax_1, minmax_2;
+	int *minx, *maxx, *miny, *maxy;
+#ifdef SWEEP_ALL_DIRECTIONS
+	int minmax_1, minmax_2;
+#endif
 
 	if (!grab_pointer(c->screen->root, MouseMask, resize_curs)) return;
 
 	mode = 0;
+#ifdef SWEEP_ALL_DIRECTIONS
 	if (mouse_rel_x < c->width / 2) {
 		mode += 1;
 	}
 	if (mouse_rel_y < c->height / 2) {
 		mode += 2;
 	}
+#endif
 
 	client_raise(c);
 #ifdef INFOBANNER_MOVERESIZE
@@ -150,13 +155,16 @@ void sweep(int mouse_rel_x, int mouse_rel_y, Client *c) {
 	XGrabServer(dpy);
 	draw_outline(c);
 
+#ifdef SWEEP_ALL_DIRECTIONS
 	switch (mode) {
 	case SWEEP_MODE_BOTR:
+#endif
 		setmouse(c->window, c->width, c->height);
 		minx = &c->x;
 		miny = &c->y;
 		maxx = &ev.xmotion.x;
 		maxy = &ev.xmotion.y;
+#ifdef SWEEP_ALL_DIRECTIONS
 		break;
 	case SWEEP_MODE_BOTL:
 		setmouse(c->window, 0, c->height);
@@ -184,6 +192,7 @@ void sweep(int mouse_rel_x, int mouse_rel_y, Client *c) {
 		maxy = &minmax_2;
 		break;
 	}
+#endif
 	for (;;) {
 		XMaskEvent(dpy, MouseMask, &ev);
 		switch (ev.type) {

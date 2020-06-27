@@ -3,10 +3,11 @@ Currently added stuff:
  * above: flag for apps to always stay on top. Usefull for panels, docks, conkies etc
  * gaps: usefull for panels etc, example: gaps 0,0,15,0,0,0,30,0 (top right bottom left) Multiple sets can be given (here 2) to cycle between
  * keybind to maximize window, while respecting gaps: C this cycles between the sets of gaps given and non-maximized
- * resizing can now be done to all directions, based on the cursor position when starting the resize (previously only towards the bottom left)
+ * resizing can now be done to all directions, based on the cursor position when starting the resize (previously only towards the bottom left) (when compiled with `-DSWEEP_ALL_DIRECTIONS`)
 
 Changelog:
  * 20200627: resizing is now possible from each corner
+             (only when compiled with `-DSWEEP_ALL_DIRECTIONS`)
  * 20200627: dragging a maximized client will restore it
  * 20200627: removed -gap0 -gap1 -gap2 -gap3 in favor of -gaps
 
