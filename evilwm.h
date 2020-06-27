@@ -142,7 +142,7 @@ struct Client {
 
 	int             x, y, width, height;
 	int             border;
-	int             oldx, oldy, oldw, oldh;  /* used when maximising */
+	int             gapindex, oldx, oldy, oldw, oldh;  /* used when maximising */
 
 	int             min_width, min_height;
 	int             max_width, max_height;
@@ -242,12 +242,11 @@ extern unsigned int     grabmask1;
 extern unsigned int     grabmask2;
 extern unsigned int     altmask;
 extern char             **opt_term;
-extern int              opt_gap0;
-extern int              opt_gap1;
-extern int              opt_gap2;
-extern int              opt_gap3;
+#define MAX_GAP_SETS 4
+extern int              opt_gaps[4 * MAX_GAP_SETS];
 extern int              opt_bw;
 extern int              opt_snap;
+extern int		opt_numgaps;
 #ifdef SOLIDDRAG
 extern int              no_solid_drag;
 #else
@@ -311,7 +310,6 @@ void get_window_type(Client *c);
 void drag(Client *c);
 void moveresize(Client *c);
 void maximise_client(Client *c, int action, int hv);
-void apply_gaps(Client *c);
 void show_info(Client *c, unsigned int keycode);
 void sweep(Client *c);
 void next(void);

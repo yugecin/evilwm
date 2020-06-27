@@ -343,7 +343,52 @@ void moveresize(Client *c) {
 	send_config(c);
 }
 
+static void apply_gaps(Client *c) {
+	// do gaps, dirty
+	int overlap;
+	int *gaps;
+
+	gaps = opt_gaps + c->gapindex * 4;
+	if (c->y < *(gaps+0)) {
+		c->y = *(gaps+0);
+	}
+	if (c->x < *(gaps+3)) {
+		c->x = *(gaps+3);
+	}
+	overlap = c->y + c->height - (DisplayHeight(dpy, c->screen->screen) - *(gaps+2));
+	while (overlap-- > 0) {
+		if (c->y > *(gaps+0)) {
+			c->y--;
+		} else {
+			c->height--;
+		}
+	}
+	overlap = c->x + c->width - (DisplayWidth(dpy, c->screen->screen) - *(gaps+1));
+	while (overlap-- > 0) {
+		if (c->x > *(gaps+3)) {
+			c->x--;
+		} else {
+			c->width--;
+		}
+	}
+}
+
+
 void maximise_client(Client *c, int action, int hv) {
+	if (hv & MAXIMISE_GAPS) {
+		c->gapindex++;
+		if (c->gapindex >= opt_numgaps) {
+			c->gapindex = -1;
+		} else if (c->gapindex) {
+			// it's already maximised, just need to apply gaps
+			c->x = 0;
+			c->width = DisplayWidth(dpy, c->screen->screen);
+			c->y = 0;
+			c->height = DisplayHeight(dpy, c->screen->screen);
+			goto skip_wm_state;
+		}
+	}
+
 	if (hv & MAXIMISE_HORZ) {
 		if (c->oldw) {
 			if (action == NET_WM_STATE_REMOVE
@@ -352,6 +397,7 @@ void maximise_client(Client *c, int action, int hv) {
 				c->width = c->oldw;
 				c->oldw = 0;
 				XDeleteProperty(dpy, c->window, xa_evilwm_unmaximised_horz);
+				c->gapindex = -1;
 			}
 		} else {
 			if (action == NET_WM_STATE_ADD
@@ -377,6 +423,7 @@ void maximise_client(Client *c, int action, int hv) {
 				c->height = c->oldh;
 				c->oldh = 0;
 				XDeleteProperty(dpy, c->window, xa_evilwm_unmaximised_vert);
+				c->gapindex = -1;
 			}
 		} else {
 			if (action == NET_WM_STATE_ADD
@@ -394,41 +441,14 @@ void maximise_client(Client *c, int action, int hv) {
 			}
 		}
 	}
+	ewmh_set_net_wm_state(c);
+skip_wm_state:
 	if (hv & MAXIMISE_GAPS) {
 		apply_gaps(c);
 	}
-	ewmh_set_net_wm_state(c);
 	moveresize(c);
 	discard_enter_events(c);
 }
-
-void apply_gaps(Client *c) {
-	// do gaps, dirty
-	int overlap;
-	if (c->y < opt_gap0) {
-		c->y = opt_gap0;
-	}
-	if (c->x < opt_gap3) {
-		c->x = opt_gap3;
-	}
-	overlap = c->y + c->height - (DisplayHeight(dpy, c->screen->screen) - opt_gap2);
-	while (overlap-- > 0) {
-		if (c->y > opt_gap0) {
-			c->y--;
-		} else {
-			c->height--;
-		}
-	}
-	overlap = c->x + c->width - (DisplayWidth(dpy, c->screen->screen) - opt_gap1);
-	while (overlap-- > 0) {
-		if (c->x > opt_gap3) {
-			c->x--;
-		} else {
-			c->width--;
-		}
-	}
-}
-
 
 void next(void) {
 	struct list *newl = list_find(clients_tab_order, current);

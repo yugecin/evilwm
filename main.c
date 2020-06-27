@@ -47,10 +47,8 @@ unsigned int grabmask2 = Mod1Mask;
 unsigned int altmask = ShiftMask;
 static const char *const def_term[] = { DEF_TERM, NULL };
 char **opt_term = (char **)def_term;
-int          opt_gap0 = 0;
-int          opt_gap1 = 0;
-int          opt_gap2 = 0;
-int          opt_gap3 = 0;
+int opt_gaps[4 * MAX_GAP_SETS];
+int opt_numgaps;
 int          opt_bw = DEF_BW;
 int          opt_snap = 0;
 #ifdef SOLIDDRAG
@@ -72,6 +70,7 @@ volatile Window initialising = None;
 /* Event loop will run until this flag is set */
 int wm_exit;
 
+static void set_gaps(const char *arg);
 static void set_app(const char *arg);
 static void set_app_geometry(const char *arg);
 static void set_app_dock(void);
@@ -91,10 +90,12 @@ static struct xconfig_option evilwm_options[] = {
 #ifdef VWM
 	{ XCONFIG_STRING,   "fc",           &opt_fc },
 #endif
-	{ XCONFIG_INT,      "gap0",         &opt_gap0 },
-	{ XCONFIG_INT,      "gap1",         &opt_gap1 },
-	{ XCONFIG_INT,      "gap2",         &opt_gap2 },
-	{ XCONFIG_INT,      "gap3",         &opt_gap3 },
+	{ XCONFIG_CALL_1,   "gaps",         &set_gaps },
+	/*legacy gap configurations*/
+	{ XCONFIG_INT,   "gap0",            opt_gaps + 0 },
+	{ XCONFIG_INT,   "gap1",            opt_gaps + 1 },
+	{ XCONFIG_INT,   "gap2",            opt_gaps + 2 },
+	{ XCONFIG_INT,   "gap3",            opt_gaps + 3 },
 	{ XCONFIG_INT,      "bw",           &opt_bw },
 	{ XCONFIG_STR_LIST, "term",         &opt_term },
 	{ XCONFIG_INT,      "snap",         &opt_snap },
@@ -165,6 +166,8 @@ int main(int argc, char *argv[]) {
 			free(conffile);
 		}
 	}
+	opt_numgaps = 1;
+	opt_gaps[0] = opt_gaps[1] = opt_gaps[2] = opt_gaps[3] = 0;
 	ret = xconfig_parse_cli(evilwm_options, argc, argv, &argn);
 	if (ret == XCONFIG_MISSING_ARG) {
 		fprintf(stderr, "%s: missing argument to `%s'\n", argv[0], argv[argn]);
@@ -375,6 +378,29 @@ static void setup_display(void) {
 
 /**************************************************************************/
 /* Option parsing callbacks */
+
+static void set_gaps(const char *arg) {
+	unsigned int gapidx;
+
+	opt_numgaps = 0;
+	gapidx = 0;
+	while (*arg) {
+		opt_gaps[gapidx] = atoi(arg);
+		++gapidx;
+		if (gapidx >= sizeof(opt_gaps)/sizeof(opt_gaps[0])) {
+			printf("toobig\n");
+			return;
+		}
+		if ((gapidx % 4) == 0) {
+			opt_numgaps++;
+		}
+		while (*arg) {
+			if (*(arg++) == ',') {
+				break;
+			}
+		}
+	}
+}
 
 static void set_app(const char *arg) {
 	Application *new = xmalloc(sizeof(Application));
